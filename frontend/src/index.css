@@ -1,0 +1,55 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --border: #2a2d3e;
+  --accent: #0070f3;
+  --accent-hover: #0060df;
+  --text: #e2e8f0;
+  --muted: #8892a4;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --font: 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+input, select {
+  font-family: inherit;
+  font-size: 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 6px 10px;
+  outline: none;
+}
+
+input:focus, select:focus { border-color: var(--accent); }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
