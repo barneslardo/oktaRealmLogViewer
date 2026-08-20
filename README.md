@@ -106,7 +106,9 @@ chmod 600 backend/.env
 cd backend && npm start        # or use the systemd unit below
 ```
 
-A helper `setup.sh` is included that parses a credentials file, generates a
+A helper `setup.sh` is included that parses a credentials file
+(`okta-credentials.txt`, or set `OKTA_CREDENTIALS=/path/to/file`; it is
+gitignored because it holds your private key and API token), generates a
 session secret, installs deps, and builds the frontend.
 
 ---
@@ -136,10 +138,12 @@ session secret, installs deps, and builds the frontend.
 
 ## Running as a service
 
-A systemd unit is provided:
+A systemd unit **template** is provided. `setup.sh` renders it for the invoking
+user and install path as `okta-realm-logs.service.local` (the tracked file keeps
+`__RUN_USER__` / `__APP_DIR__` placeholders, so it carries no host-specific paths):
 
 ```bash
-sudo cp okta-realm-logs.service /etc/systemd/system/
+sudo cp okta-realm-logs.service.local /etc/systemd/system/okta-realm-logs.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now okta-realm-logs
 sudo systemctl status okta-realm-logs
@@ -202,7 +206,7 @@ When standing this up against a tenant, all of the following must be true:
 ## Project layout
 
 ```
-zachDemo/
+okta-realm-log-viewer/
 ├── backend/
 │   ├── src/
 │   │   ├── server.js            # Express app, OIDC client init, static serving
@@ -217,7 +221,7 @@ zachDemo/
 │       └── components/
 │           ├── LogViewer.jsx    # filters, table, realm selector, refresh
 │           └── LogDetail.jsx    # event detail panel
-├── okta-realm-logs.service      # systemd unit
+├── okta-realm-logs.service      # systemd unit template (placeholders)
 ├── setup.sh                     # bootstrap helper
 └── README.md
 ```

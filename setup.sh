@@ -2,14 +2,18 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-INPUT="$SCRIPT_DIR/zachDemo.txt"
+# Credential input file: client id, private key (PEM or JWK), Okta API token.
+# Override with: OKTA_CREDENTIALS=/path/to/file ./setup.sh
+# NOTE: this file holds secrets — it is gitignored; never commit it.
+INPUT="${OKTA_CREDENTIALS:-$SCRIPT_DIR/okta-credentials.txt}"
+[[ -f "$INPUT" ]] || [[ ! -f "$SCRIPT_DIR/zachDemo.txt" ]] || INPUT="$SCRIPT_DIR/zachDemo.txt"
 ENV_FILE="$SCRIPT_DIR/backend/.env"
 
 echo "=== Okta Realm Log Viewer — Setup ==="
 
-# ── Parse zachDemo.txt ──────────────────────────────────────────────────────
+# ── Parse the credentials file ───────────────────────────────────────────────
 if [[ ! -f "$INPUT" ]]; then
-  echo "ERROR: $INPUT not found. Run the scp command first."
+  echo "ERROR: $INPUT not found. Copy your Okta credentials there first."
   exit 1
 fi
 
@@ -66,6 +70,15 @@ cd "$SCRIPT_DIR/frontend" && npm install
 
 echo "Building React frontend…"
 npm run build
+
+# ── Render the systemd unit for this user/path ────────────────────────────────
+if [ -f "$SCRIPT_DIR/okta-realm-logs.service" ]; then
+  sed -e "s|__RUN_USER__|$(id -un)|g" \
+      -e "s|__APP_DIR__|$SCRIPT_DIR|g" \
+      "$SCRIPT_DIR/okta-realm-logs.service" > "$SCRIPT_DIR/okta-realm-logs.service.local"
+  echo "Rendered okta-realm-logs.service.local for user $(id -un) at $SCRIPT_DIR"
+  echo "  Install with: sudo cp $SCRIPT_DIR/okta-realm-logs.service.local /etc/systemd/system/okta-realm-logs.service"
+fi
 
 echo ""
 echo "=== Setup complete ==="

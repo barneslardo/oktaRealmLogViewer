@@ -1,15 +1,16 @@
 [Unit]
 Description=Okta Realm Log Viewer
+Documentation=https://github.com/barneslardo/oktaRealmLogViewer
 After=network.target
 
 [Service]
 Type=simple
-User=skylar
-WorkingDirectory=/home/skylar/zachDemo/backend
+User=__RUN_USER__
+WorkingDirectory=__APP_DIR__/backend
 ExecStart=/usr/bin/node src/server.js
 Restart=on-failure
 RestartSec=5
-EnvironmentFile=/home/skylar/zachDemo/backend/.env
+EnvironmentFile=__APP_DIR__/backend/.env
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=okta-realm-logs

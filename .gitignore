@@ -45,3 +45,10 @@ Thumbs.db
 # Misc
 *.bak
 *.tmp
+
+# Rendered systemd unit (host-specific)
+okta-realm-logs.service.local
+
+# Okta credential input for setup.sh (private key JWK + API token) — never commit
+okta-credentials.txt
+zachDemo.txt
